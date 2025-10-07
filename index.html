@@ -3,56 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Microverse: Infinity — Prototype</title>
+  <title>Microverse: Infinity — Prototype (Balanced Update)</title>
   <style>
-    :root{
-      --bg:#0f1724; --card:#0b1220; --accent:#00ff9d; --muted:#9aa7b2; --glass: rgba(255,255,255,0.04);
-      --glass-2: rgba(255,255,255,0.02);
-    }
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#00ff9d;--muted:#9aa7b2;--glass:rgba(255,255,255,0.04);--glass-2:rgba(255,255,255,0.02);}
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:#e6eef6;background:linear-gradient(180deg,#071024 0%,var(--bg) 100%);}
     .app{max-width:1100px;margin:28px auto;padding:20px;display:grid;grid-template-columns:360px 1fr;gap:20px}
-
     header{grid-column:1/3;display:flex;align-items:center;justify-content:space-between}
     header h1{margin:0;font-size:20px}
     header p{margin:0;color:var(--muted);font-size:13px}
-
     .panel{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
-
-    /* left column */
     .left .stats{display:grid;gap:10px}
     .stat{background:var(--glass);padding:10px;border-radius:10px}
     .stat .label{font-size:12px;color:var(--muted)}
     .stat .value{font-weight:700;font-size:18px;color:var(--accent)}
-
     .clicker{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px}
     #clickBtn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(180deg,#16354b,#0f2a3b);color:#fff;font-weight:700;font-size:16px;cursor:pointer}
     #clickBtn:active{transform:scale(.99)}
-
     .upgrades{display:flex;flex-direction:column;gap:8px;margin-top:12px}
     .upgrade{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass-2);border:1px solid rgba(255,255,255,0.02)}
     .upgrade button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;color:var(--muted);cursor:pointer}
-
-    /* right column */
     .world{min-height:520px;display:flex;flex-direction:column}
     .hud{display:flex;gap:10px;align-items:center;justify-content:space-between}
     .hud .small{font-size:13px;color:var(--muted)}
-
     .stage{margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);display:flex;gap:12px;align-items:center}
     .stage .cell-preview{width:86px;height:86px;border-radius:12px;background:linear-gradient(180deg,#06212a,#081a20);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -6px 20px rgba(0,0,0,0.6)}
     .cell-dot{border-radius:50%;width:36px;height:36px;background:var(--accent);box-shadow:0 0 18px rgba(0,255,157,0.18),0 6px 24px rgba(0,0,0,0.6);animation:pulse 1.4s infinite}
     @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
-
     .evolution-log{margin-top:14px;flex:1;overflow:auto;padding:12px;background:var(--glass);border-radius:12px}
     .log-item{font-size:13px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.02);color:var(--muted)}
-
-    /* cell field */
     .field-wrap{margin-top:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:12px}
     .field{height:300px;border-radius:10px;background:radial-gradient(circle at 20% 30%, rgba(0,255,157,0.02), transparent 10%), linear-gradient(180deg,#041126,#071224);position:relative;overflow:hidden}
-
     .micro-cell{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#021018;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
-
-    /* responsive */
+    .progress-wrap{margin-top:8px}
+    .progress{height:12px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden}
+    .progress > div{height:100%;width:0%;transition:width 400ms linear;background:linear-gradient(90deg,#00ff9d,#7bf0b8)}
+    .dna-panel{margin-top:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:10px;border-radius:10px}
+    .dna-btn{padding:6px 10px;border-radius:8px;border:none;background:#14383f;color:#fff;cursor:pointer}
+    .achievements{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+    .ach{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
+    .ach.unlocked{background:linear-gradient(90deg,#0b3b2f,#083025);color:#d6ffe8}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .toggle{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer}
     @media (max-width:980px){.app{grid-template-columns:1fr;}.left{order:2}.world{order:1}}
   </style>
 </head>
@@ -61,7 +53,7 @@
     <header>
       <div>
         <h1>Microverse: Infinity</h1>
-        <p>Evolution Without Limits — prototype</p>
+        <p>Balanced Update — DNA, Achievements, Progress, Automation</p>
       </div>
       <div>
         <p id="saveHint" class="small">Auto-save enabled • Offline gain supported</p>
@@ -70,298 +62,254 @@
 
     <div class="panel left">
       <div class="stats">
-        <div class="stat">
-          <div class="label">Cells</div>
-          <div class="value" id="cells">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">Cells / sec</div>
-          <div class="value" id="cps">0</div>
-        </div>
-        <div class="stat">
-          <div class="label">Evolution Stage</div>
-          <div class="value" id="stage">1</div>
-        </div>
+        <div class="stat"><div class="label">Cells</div><div class="value" id="cells">0</div></div>
+        <div class="stat"><div class="label">Cells / sec</div><div class="value" id="cps">0</div></div>
+        <div class="stat"><div class="label">Evolution Stage</div><div class="value" id="stage">1</div></div>
+        <div class="stat"><div class="label">DNA</div><div class="value" id="dna">0</div></div>
+
         <div class="clicker">
           <button id="clickBtn">Generate Cell</button>
-          <div class="small" style="color:var(--muted)">Click or let evolution run automatically.</div>
+          <div class="small" style="color:var(--muted)">Click or let evolution run. DNA unlocks at Stage 5.</div>
+        </div>
+
+        <div class="progress-wrap">
+          <div style="font-size:12px;color:var(--muted);margin-top:6px">Progress to next Stage</div>
+          <div class="progress"><div id="evoBar"></div></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px">Progress to next DNA</div>
+          <div class="progress"><div id="dnaBar"></div></div>
         </div>
       </div>
 
       <h3 style="margin-top:14px;color:var(--muted)">Upgrades & Labs</h3>
       <div class="upgrades" id="upgrades"></div>
 
-      <h3 style="margin-top:14px;color:var(--muted)">Quick Actions</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-        <button id="exportBtn">Export Save</button>
-        <button id="importBtn">Import Save</button>
-        <button id="resetBtn">Reset</button>
+      <div class="dna-panel" id="geneticPanel" style="display:none">
+        <div style="font-weight:700">Genetic Upgrades</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:6px">Spend DNA on permanent, meaningful bonuses.</div>
+        <div id="geneticUpgrades" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+      <h3 style="margin-top:12px;color:var(--muted)">Achievements</h3>
+      <div class="achievements" id="achievements"></div>
+
+      <div style="margin-top:12px"><div style="font-size:12px;color:var(--muted)">Quick Actions</div>
+        <div class="controls">
+          <button id="exportBtn">Export Save</button>
+          <button id="importBtn">Import Save</button>
+          <button id="resetBtn">Reset</button>
+          <button id="toggleAuto" class="toggle">Automation: OFF</button>
+        </div>
       </div>
     </div>
 
     <div class="panel world">
-      <div class="hud">
-        <div class="small">Microfield • watch cells evolve and cluster</div>
-        <div class="small">Played: <span id="played">0s</span></div>
-      </div>
-
+      <div class="hud"><div class="small">Microfield • watch cells evolve and cluster</div><div class="small">Played: <span id="played">0s</span></div></div>
       <div class="stage">
         <div class="cell-preview"><div class="cell-dot" id="previewDot"></div></div>
-        <div>
-          <div style="font-weight:700">Stage <span id="stageLabel">1</span></div>
-          <div style="color:var(--muted);font-size:13px">Unlocks new cell types as you reach thresholds.</div>
-        </div>
+        <div><div style="font-weight:700">Stage <span id="stageLabel">1</span></div><div style="color:var(--muted);font-size:13px">Unlocks new cell types as you reach thresholds.</div></div>
       </div>
 
-      <div class="field-wrap">
-        <div class="field" id="field"></div>
-      </div>
-
+      <div class="field-wrap"><div class="field" id="field"></div></div>
       <div class="evolution-log" id="log"></div>
     </div>
   </div>
 
   <script>
-    // === Microverse: Infinity — Prototype JS ===
-    // Data model for upgrades and cell types
-    const GAME_VERSION = '0.9.0-proto';
+    // Balanced Update: DNA, Achievements, Progress Bars, Automation
+    const GAME_VERSION = '0.9.1-balanced';
 
+    // --- data definitions ---
     const upgradesData = [
-      {id:'u1', name:'Micro Mutation', baseCost:10, cps:1},
-      {id:'u2', name:'Nano Division', baseCost:50, cps:5},
-      {id:'u3', name:'Quantum Split', baseCost:250, cps:20},
-      {id:'u4', name:'Molecular Fusion', baseCost:1200, cps:75},
-      {id:'u5', name:'Cellular Evolution', baseCost:6000, cps:300},
-      {id:'u6', name:'Autonomous Microbots', baseCost:30000, cps:1500}
+      {id:'u1',name:'Micro Mutation', baseCost:10, cps:1},
+      {id:'u2',name:'Nano Division', baseCost:50, cps:5},
+      {id:'u3',name:'Quantum Split', baseCost:250, cps:20},
+      {id:'u4',name:'Molecular Fusion', baseCost:1200, cps:75},
+      {id:'u5',name:'Cellular Evolution', baseCost:6000, cps:300},
+      {id:'u6',name:'Autonomous Microbots', baseCost:30000, cps:1500}
     ];
 
     const cellTypes = [
-      {id:'ct1', name:'Prokaryote', unlockStage:1, color:'#00ff9d', size:10, multiplier:1},
-      {id:'ct2', name:'Eubacter', unlockStage:2, color:'#7bf0b8', size:14, multiplier:1.5},
-      {id:'ct3', name:'Protocyte', unlockStage:3, color:'#00d9ff', size:18, multiplier:2.2},
-      {id:'ct4', name:'Eukaryote', unlockStage:4, color:'#c28cff', size:24, multiplier:3.5},
-      {id:'ct5', name:'Multicell', unlockStage:6, color:'#ffb86b', size:32, multiplier:6}
+      {id:'ct1',name:'Prokaryote',unlockStage:1,color:'#00ff9d',size:10,multiplier:1},
+      {id:'ct2',name:'Eubacter',unlockStage:2,color:'#7bf0b8',size:14,multiplier:1.5},
+      {id:'ct3',name:'Protocyte',unlockStage:3,color:'#00d9ff',size:18,multiplier:2.2},
+      {id:'ct4',name:'Eukaryote',unlockStage:4,color:'#c28cff',size:24,multiplier:3.5},
+      {id:'ct5',name:'Multicell',unlockStage:6,color:'#ffb86b',size:32,multiplier:6}
     ];
 
-    // game state
+    const geneticUpgradesData = [
+      {id:'g1', name:'DNA Efficiency I', cost:3, type:'mult', value:1.05, desc:'+5% CPS'},
+      {id:'g2', name:'DNA Efficiency II', cost:8, type:'mult', value:1.12, desc:'+12% CPS'},
+      {id:'g3', name:'Automation Boost', cost:12, type:'auto', value:0.8, desc:'Automation checks 20% faster'}
+    ];
+
+    const achievementsData = [
+      {id:'a1', name:'First Division', check: s=> s.totalCells>=100, reward: {type:'mult',value:1.01}},
+      {id:'a2', name:'Starter Colony', check: s=> s.totalCells>=1000, reward:{type:'mult',value:1.02}},
+      {id:'a3', name:'Mini Empire', check: s=> s.totalCells>=10000, reward:{type:'mult',value:1.03}},
+      {id:'a4', name:'Stage 5 Breakthrough', check: s=> s.stage>=5, reward:{type:'mult',value:1.04}},
+      {id:'a5', name:'Stage 10 Liftoff', check: s=> s.stage>=10, reward:{type:'mult',value:1.06}},
+      {id:'a6', name:'Relentless', check: s=> s.cps>=1000, reward:{type:'mult',value:1.05}},
+      {id:'a7', name:'DNA Collector', check: s=> s.dna>=10, reward:{type:'mult',value:1.04}},
+      {id:'a8', name:'Automation Ready', check: s=> s.upgrades['u4']>=1, reward:{type:'mult',value:1.03}},
+      {id:'a9', name:'Marathon', check: s=> s.playedSeconds>=3600, reward:{type:'mult',value:1.05}},
+      {id:'a10', name:'Million Maker', check: s=> s.totalCells>=1_000_000, reward:{type:'mult',value:1.08}},
+      {id:'a11', name:'Stage 15 Ascendant', check: s=> s.stage>=15, reward:{type:'mult',value:1.1}},
+      {id:'a12', name:'Microverse Legend', check: s=> s.totalCells>=1_000_000_000, reward:{type:'mult',value:1.15}}
+    ];
+
+    // --- game state ---
     const state = {
-      cells: 0,
-      cps: 0,
-      stage: 1,
-      upgrades: {}, // counts per upgrade id
-      playedSeconds: 0,
-      lastTick: Date.now()
+      version: GAME_VERSION,
+      cells:0,
+      totalCells:0,
+      cps:0,
+      stage:1,
+      dna:0,
+      upgrades:{},
+      genetics:{},
+      achievements:{},
+      autoBuy:false,
+      autoInterval:5000, // ms
+      playedSeconds:0,
+      lastTick:Date.now()
     };
 
-    // DOM refs
+    // --- DOM refs ---
     const cellsEl = document.getElementById('cells');
     const cpsEl = document.getElementById('cps');
     const stageEl = document.getElementById('stage');
     const stageLabel = document.getElementById('stageLabel');
+    const dnaEl = document.getElementById('dna');
+    const evoBar = document.getElementById('evoBar');
+    const dnaBar = document.getElementById('dnaBar');
     const field = document.getElementById('field');
     const logEl = document.getElementById('log');
     const playedEl = document.getElementById('played');
-
-    // init upgrades UI
     const upgradesContainer = document.getElementById('upgrades');
-    upgradesData.forEach(u => {
-      state.upgrades[u.id] = 0;
-      const wrap = document.createElement('div');
-      wrap.className = 'upgrade';
-      const left = document.createElement('div');
-      left.innerHTML = `<div style=\"font-weight:700\">${u.name}</div><div style=\"font-size:12px;color:var(--muted)\">+${u.cps} cps</div>`;
-      const right = document.createElement('div');
-      const btn = document.createElement('button');
-      btn.id = `buy-${u.id}`;
-      btn.textContent = `Buy (${u.baseCost})`;
-      right.appendChild(btn);
-      wrap.appendChild(left);wrap.appendChild(right);
-      upgradesContainer.appendChild(wrap);
+    const achievementsContainer = document.getElementById('achievements');
+    const geneticPanel = document.getElementById('geneticPanel');
+    const geneticUpgradesContainer = document.getElementById('geneticUpgrades');
+    const toggleAutoBtn = document.getElementById('toggleAuto');
 
+    // initialize state containers
+    upgradesData.forEach(u=> state.upgrades[u.id]=0);
+    geneticUpgradesData.forEach(g=> state.genetics[g.id]=0);
+    achievementsData.forEach(a=> state.achievements[a.id]=false);
+
+    // --- UI build ---
+    upgradesData.forEach(u=>{
+      const wrap = document.createElement('div'); wrap.className='upgrade';
+      const left = document.createElement('div'); left.innerHTML = `<div style=\"font-weight:700\">${u.name}</div><div style=\"font-size:12px;color:var(--muted)\">+${u.cps} cps</div>`;
+      const right = document.createElement('div');
+      const btn = document.createElement('button'); btn.id = `buy-${u.id}`; btn.textContent = `Buy (${u.baseCost})`;
+      right.appendChild(btn); wrap.appendChild(left); wrap.appendChild(right); upgradesContainer.appendChild(wrap);
       btn.addEventListener('click',()=>buyUpgrade(u));
     });
 
-    // clicker
-    document.getElementById('clickBtn').addEventListener('click',()=>{
-      addCells(1);
-      spawnCell('click');
+    geneticUpgradesData.forEach(g=>{
+      const el = document.createElement('div'); el.className='upgrade'; el.innerHTML = `<div><div style=\"font-weight:700\">${g.name}</div><div style=\"font-size:12px;color:var(--muted)\">${g.desc}</div></div>`;
+      const btn = document.createElement('button'); btn.textContent = `Buy (${g.cost} DNA)`; btn.addEventListener('click',()=>buyGenetic(g)); el.appendChild(btn); geneticUpgradesContainer.appendChild(el);
     });
 
-    // quick actions
-    document.getElementById('exportBtn').addEventListener('click',()=>{
-      const data = btoa(JSON.stringify(state));
-      prompt('Copy your save string:', data);
-    });
-    document.getElementById('importBtn').addEventListener('click',()=>{
-      const s = prompt('Paste save string:');
-      try{ if(s){ const parsed = JSON.parse(atob(s)); Object.assign(state,parsed); renderAll(); log('Imported save'); }}catch(e){alert('Invalid save');}
-    });
-    document.getElementById('resetBtn').addEventListener('click',()=>{
-      if(confirm('Reset progress?')){ localStorage.removeItem('microverse.save'); location.reload(); }
+    achievementsData.forEach(a=>{
+      const el = document.createElement('div'); el.id = `ach-${a.id}`; el.className='ach'; el.textContent = `${a.name}`; achievementsContainer.appendChild(el);
     });
 
-    // core functions
-    function addCells(n){ state.cells += n; }
-    function buyUpgrade(u){
-      const cost = Math.floor(getUpgradeCost(u) );
-      if(state.cells >= cost){ state.cells -= cost; state.upgrades[u.id]++; state.cps += u.cps; log(`Purchased ${u.name} (+${u.cps} cps)`); updateUpgradesUI(); renderAll(); }
+    // --- clicker ---
+    document.getElementById('clickBtn').addEventListener('click',()=>{ addCells(1); spawnCell('click'); });
+    field.addEventListener('click',()=>{ addCells(Math.ceil(state.cps*0.05)+1); spawnCell('field'); });
+
+    document.getElementById('exportBtn').addEventListener('click',()=>{ const data = btoa(JSON.stringify(state)); prompt('Copy your save string:', data); });
+    document.getElementById('importBtn').addEventListener('click',()=>{ const s = prompt('Paste save string:'); try{ if(s){ const parsed = JSON.parse(atob(s)); Object.assign(state, parsed); postLoadAdjust(); renderAll(); log('Imported save'); }}catch(e){alert('Invalid save');}});
+    document.getElementById('resetBtn').addEventListener('click',()=>{ if(confirm('Reset progress?')){ localStorage.removeItem('microverse.save'); location.reload(); }});
+    toggleAutoBtn.addEventListener('click',()=>{ if(!canUseAuto()) return alert('Automation locked — buy Molecular Fusion (Upgrade 4) to unlock.'); state.autoBuy = !state.autoBuy; toggleAutoBtn.textContent = `Automation: ${state.autoBuy? 'ON':'OFF'}`; });
+
+    // --- core functions ---
+    function addCells(n){ const multiplier = getAllMultipliers(); state.cells += n * multiplier; state.totalCells += n * multiplier; }
+    function getAllMultipliers(){ let mult = 1; // genetic bonuses
+      geneticUpgradesData.forEach(g=>{ if(state.genetics[g.id]){ if(g.type==='mult') mult *= g.value; }});
+      // achievements (apply multiplicative small boosts)
+      achievementsData.forEach(a=>{ if(state.achievements[a.id] && a.reward && a.reward.type==='mult') mult *= a.reward.value; });
+      return mult;
     }
 
-    function getUpgradeCost(u){
-      // exponential scaling depending on how many bought
-      const bought = state.upgrades[u.id] || 0;
-      return u.baseCost * Math.pow(1.6, bought);
+    function buyUpgrade(u){ const cost = Math.floor(getUpgradeCost(u)); if(state.cells >= cost){ state.cells -= cost; state.upgrades[u.id]++; state.cps += u.cps; log(`Purchased ${u.name} (+${u.cps} cps)`); updateUpgradesUI(); checkAutoUnlock(); renderAll(); }}
+    function getUpgradeCost(u){ const bought = state.upgrades[u.id] || 0; return u.baseCost * Math.pow(1.6, bought); }
+    function updateUpgradesUI(){ upgradesData.forEach(u=>{ const btn = document.getElementById('buy-'+u.id); const cost = Math.floor(getUpgradeCost(u)); btn.textContent = `Buy (${format(cost)})`; }); }
+
+    function buyGenetic(g){ if(state.dna >= g.cost && !state.genetics[g.id]){ state.dna -= g.cost; state.genetics[g.id]=1; if(g.type==='mult'){ /* nothing extra, multiplier used in addCells */ } if(g.type==='auto'){ state.autoInterval = Math.max(1200, Math.floor(state.autoInterval * g.value)); } log(`Genetic upgrade purchased: ${g.name}`); renderAll(); } }
+
+    function spawnCell(source){ const t = getCurrentCellType(); const el = document.createElement('div'); el.className='micro-cell'; const size = t.size + Math.random()*12; el.style.width = size+'px'; el.style.height = size+'px'; el.style.left = Math.random()*(field.clientWidth-size)+'px'; el.style.top = Math.random()*(field.clientHeight-size)+'px'; el.style.background = t.color; el.style.opacity = 0.95; el.style.transition = 'transform 3s linear, opacity 3s linear'; field.appendChild(el); requestAnimationFrame(()=>{ el.style.transform = `translate(${(Math.random()-0.5)*80}px, ${(Math.random()-0.5)*40}px) scale(${1+Math.random()*0.6})`; el.style.opacity = 0.2; }); setTimeout(()=>{ if(el && el.parentNode) el.parentNode.removeChild(el); }, 3500 + Math.random()*1200); }
+
+    function getCurrentCellType(){ let available = cellTypes.filter(ct=> ct.unlockStage <= state.stage); return available[Math.floor(Math.random()*available.length)]; }
+
+    function checkEvolution(){ const threshold = Math.pow(1.8, state.stage-1) * 1000; if(state.cells >= threshold){ state.stage++; state.cps *= 1.12; log(`Evolution! Reached Stage ${state.stage} — new cell types available.`); const ct = getCurrentCellType(); document.getElementById('previewDot').style.background = ct.color; for(let i=0;i<10;i++) spawnCell('evo'); checkDNAGain(); } }
+
+    function checkDNAGain(){ // DNA gained for every 1e6 lifetime totalCells
+      const dnaFromTotal = Math.floor(state.totalCells / 1_000_000);
+      const dnaAlready = state.dnaGainedTotal || 0;
+      const newDNA = dnaFromTotal - dnaAlready;
+      if(newDNA > 0){ state.dna += newDNA; state.dnaGainedTotal = dnaFromTotal; log(`Gained ${newDNA} DNA from long-term growth.`); }
+      // show genetic panel at stage 5
+      if(state.stage >= 5) geneticPanel.style.display = 'block';
     }
 
-    function updateUpgradesUI(){
-      upgradesData.forEach(u=>{
-        const btn = document.getElementById('buy-'+u.id);
-        const cost = Math.floor(getUpgradeCost(u));
-        btn.textContent = `Buy (${cost})`;
-      });
+    function checkAchievements(){ achievementsData.forEach(a=>{ if(!state.achievements[a.id] && a.check(state)){ state.achievements[a.id]=true; log(`Achievement: ${a.name}`); const el = document.getElementById('ach-'+a.id); if(el) el.classList.add('unlocked'); /* rewards applied via multipliers in getAllMultipliers */ } }); }
+
+    // progress bars
+    function updateProgressBars(){ const nextGoal = Math.pow(1.8, state.stage-1) * 1000; const progress = Math.min(state.cells / nextGoal, 1); evoBar.style.width = (progress*100) + '%'; evoBar.title = `${Math.floor(state.cells)} / ${Math.floor(nextGoal)} Cells`;
+      const nextDNA = (Math.floor(state.totalCells / 1_000_000) + 1) * 1_000_000; const dnaProg = Math.min(state.totalCells / nextDNA, 1); dnaBar.style.width = (dnaProg*100) + '%'; dnaBar.title = `${Math.floor(state.totalCells)} / ${nextDNA} total cells to next DNA`;
     }
 
-    function renderAll(){
-      cellsEl.textContent = Math.floor(state.cells);
-      cpsEl.textContent = Math.round(state.cps*100)/100;
-      stageEl.textContent = state.stage;
-      stageLabel.textContent = state.stage;
-      playedEl.textContent = `${state.playedSeconds}s`;
-      updateUpgradesUI();
+    // autosave and auto-buy
+    function canUseAuto(){ return state.upgrades['u4'] >= 1; }
+    function autoBuyTick(){ if(!state.autoBuy) return; // try to buy cheapest affordable
+      const affordable = upgradesData.map(u=>({u, cost:getUpgradeCost(u)})).filter(o=> state.cells >= o.cost);
+      if(affordable.length===0) return; affordable.sort((a,b)=>a.cost-b.cost); buyUpgrade(affordable[0].u);
     }
 
-    function log(msg){
-      const el = document.createElement('div'); el.className='log-item'; el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`; logEl.prepend(el);
-      // keep log short
-      if(logEl.children.length>120) logEl.removeChild(logEl.lastChild);
-    }
+    // main tick
+    function tick(){ const now = Date.now(); let dt = (now - state.lastTick)/1000.0; if(dt>10) dt=10; state.lastTick = now; const gain = state.cps * dt; state.cells += gain; state.totalCells += gain; state.playedSeconds += Math.floor(dt);
+      // passive spawns
+      if(Math.random() < Math.min(0.2, state.cps/500)) spawnCell('passive'); checkEvolution(); checkDNAGain(); checkAchievements(); renderAll(); }
 
-    // spawn animated cells in the field
-    function spawnCell(source){
-      const t = getCurrentCellType();
-      const el = document.createElement('div');
-      el.className = 'micro-cell';
-      const size = t.size + Math.random()*12;
-      el.style.width = size+'px'; el.style.height = size+'px';
-      el.style.left = Math.random()*(field.clientWidth-size)+'px';
-      el.style.top = Math.random()*(field.clientHeight-size)+'px';
-      el.style.background = t.color;
-      el.style.opacity = 0.95;
-      el.style.transition = 'transform 3s linear, opacity 3s linear';
-      el.textContent = '';
-      field.appendChild(el);
+    function renderAll(){ cellsEl.textContent = Math.floor(state.cells); cpsEl.textContent = Math.round(state.cps*100)/100; stageEl.textContent = state.stage; stageLabel.textContent = state.stage; dnaEl.textContent = Math.floor(state.dna); playedEl.textContent = `${state.playedSeconds}s`; updateUpgradesUI(); updateGeneticUI(); updateAchievementsUI(); updateProgressBars(); }
 
-      // subtle drift and fade
-      requestAnimationFrame(()=>{
-        el.style.transform = `translate(${(Math.random()-0.5)*80}px, ${(Math.random()-0.5)*40}px) scale(${1+Math.random()*0.6})`;
-        el.style.opacity = 0.2;
-      });
+    function updateGeneticUI(){ geneticUpgradesData.forEach(g=>{ const btn = Array.from(geneticUpgradesContainer.querySelectorAll('button')).find(b=> b.textContent.includes(`${g.cost}`)); if(!btn) return; if(state.genetics[g.id]) btn.textContent = 'Purchased'; else btn.textContent = `Buy (${g.cost} DNA)`; }); }
+    function updateAchievementsUI(){ achievementsData.forEach(a=>{ const el = document.getElementById('ach-'+a.id); if(!el) return; if(state.achievements[a.id]) el.classList.add('unlocked'); else el.classList.remove('unlocked'); }); }
 
-      setTimeout(()=>{ if(el && el.parentNode) el.parentNode.removeChild(el); }, 3500 + Math.random()*1200);
-    }
+    function format(n){ if(n>=1e9) return (n/1e9).toFixed(2)+'B'; if(n>=1e6) return (n/1e6).toFixed(2)+'M'; if(n>=1e3) return (n/1e3).toFixed(2)+'k'; return Math.floor(n); }
 
-    function getCurrentCellType(){
-      // choose highest unlocked cell type
-      let available = cellTypes.filter(ct=> ct.unlockStage <= state.stage);
-      return available[ Math.floor(Math.random()*available.length) ];
-    }
-
-    // evolution: when cells exceed threshold, increase stage and unlock new visuals
-    function checkEvolution(){
-      const threshold = Math.pow(1.8, state.stage-1) * 1000; // escalating threshold
-      if(state.cells >= threshold){
-        state.stage++;
-        state.cps *= 1.12; // small boost on evolution
-        log(`Evolution! Reached Stage ${state.stage} — new cell types available.`);
-        // change preview color
-        const ct = getCurrentCellType();
-        document.getElementById('previewDot').style.background = ct.color;
-        // spawn celebratory cells
-        for(let i=0;i<10;i++) spawnCell('evo');
-      }
-    }
-
-    // auto loop
-    function tick(){
-      const now = Date.now();
-      let dt = (now - state.lastTick)/1000.0; // seconds
-      if(dt>10) dt = 10; // clamp for huge gaps
-      state.lastTick = now;
-
-      // offline gain applied on load by earlier step; here we add normal gain
-      const gain = state.cps * dt;
-      state.cells += gain;
-      state.playedSeconds += Math.floor(dt);
-
-      // occasional passive spawns to show activity
-      if(Math.random() < Math.min(0.2, state.cps/500)) spawnCell('passive');
-
-      // check evolution every tick
-      checkEvolution();
-
-      renderAll();
-    }
+    function log(msg){ const el = document.createElement('div'); el.className='log-item'; el.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`; logEl.prepend(el); if(logEl.children.length>200) logEl.removeChild(logEl.lastChild); }
 
     // save/load
-    function save(){
-      const toSave = {
-        v: GAME_VERSION,
-        cells: state.cells,
-        cps: state.cps,
-        stage: state.stage,
-        upgrades: state.upgrades,
-        playedSeconds: state.playedSeconds,
-        lastTick: state.lastTick
+    function save(){ const toSave = {
+      version: state.version, cells: state.cells, totalCells: state.totalCells, cps: state.cps, stage: state.stage, dna: state.dna, upgrades: state.upgrades, genetics: state.genetics, achievements: state.achievements, autoBuy: state.autoBuy, autoInterval: state.autoInterval, playedSeconds: state.playedSeconds, lastTick: state.lastTick, dnaGainedTotal: state.dnaGainedTotal || 0
       };
-      localStorage.setItem('microverse.save', JSON.stringify(toSave));
-    }
+      localStorage.setItem('microverse.save', JSON.stringify(toSave)); }
 
-    function load(){
-      const raw = localStorage.getItem('microverse.save');
-      if(!raw) return false;
-      try{
-        const s = JSON.parse(raw);
-        state.cells = s.cells || 0; state.cps = s.cps || 0; state.stage = s.stage || 1; state.playedSeconds = s.playedSeconds || 0; state.lastTick = s.lastTick || Date.now();
-        // if upgrades were saved
-        if(s.upgrades){ Object.keys(s.upgrades).forEach(k=> state.upgrades[k] = s.upgrades[k]); }
-        // apply offline gain
-        const offlineSec = Math.floor((Date.now() - state.lastTick)/1000);
-        if(offlineSec > 1){
-          const offlineGain = offlineSec * state.cps;
-          state.cells += offlineGain;
-          log(`Welcome back! Offline gain: ${Math.floor(offlineGain)} cells over ${offlineSec}s`);
-        }
-        return true;
-      }catch(e){console.warn('load failed',e); return false}
-    }
+    function load(){ const raw = localStorage.getItem('microverse.save'); if(!raw) return false; try{ const s = JSON.parse(raw); state.cells = s.cells||0; state.totalCells = s.totalCells||0; state.cps = s.cps||0; state.stage = s.stage||1; state.dna = s.dna||0; state.upgrades = s.upgrades||state.upgrades; state.genetics = s.genetics||state.genetics; state.achievements = s.achievements||state.achievements; state.autoBuy = s.autoBuy||false; state.autoInterval = s.autoInterval||state.autoInterval; state.playedSeconds = s.playedSeconds||0; state.lastTick = s.lastTick||Date.now(); state.dnaGainedTotal = s.dnaGainedTotal||0; // offline gain
+        const offlineSec = Math.floor((Date.now() - state.lastTick)/1000); if(offlineSec>1){ const offlineGain = offlineSec * state.cps; state.cells += offlineGain; state.totalCells += offlineGain; log(`Welcome back! Offline gain: ${Math.floor(offlineGain)} cells over ${offlineSec}s`); }
+        return true; }catch(e){console.warn('load failed',e); return false; } }
 
-    // periodic save
-    setInterval(()=>{ save(); }, 5000);
+    function postLoadAdjust(){ // ensure UI elements match loaded state
+      updateUpgradesUI(); updateGeneticUI(); updateAchievementsUI(); renderAll(); checkDNAGain(); checkAutoUnlock(); }
 
-    // render initial upgrades costs and UI
-    renderAll(); updateUpgradesUI();
+    function checkAutoUnlock(){ if(canUseAuto()){ toggleAutoBtn.disabled = false; toggleAutoBtn.title = 'Automation unlocked'; } else { toggleAutoBtn.disabled = true; toggleAutoBtn.title = 'Automation locked'; state.autoBuy = false; toggleAutoBtn.textContent = 'Automation: OFF'; } }
 
-    // load existing save
-    if(load()){ renderAll(); updateUpgradesUI(); }
+    // initial boot
+    updateUpgradesUI(); updateGeneticUI(); updateAchievementsUI(); renderAll();
+    if(load()) postLoadAdjust(); state.lastTick = Date.now();
 
-    // start tick loop
-    state.lastTick = Date.now();
-    setInterval(tick, 1000);
+    // loops
+    setInterval(()=>{ tick(); save(); }, 1000);
+    setInterval(()=>{ if(state.autoBuy) autoBuyTick(); }, state.autoInterval);
 
-    // spawn a few cells initially for visual life
+    // small visual life
     for(let i=0;i<18;i++) setTimeout(()=>spawnCell('init'), i*80);
 
-    // minor polish: spawn on click in field for fun
-    field.addEventListener('click', (e)=>{
-      addCells( Math.ceil(state.cps*0.05) + 1 ); // clicking field gives small reward
-      spawnCell('field');
-    });
-
-    // keep UI alive
-    renderAll();
-
-    // debugging helper
-    console.log('Microverse prototype running — version', GAME_VERSION);
+    // debugging
+    console.log('Microverse balanced prototype running — version', GAME_VERSION);
   </script>
 </body>
 </html>
