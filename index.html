@@ -225,7 +225,13 @@
     }
 
     function buyUpgrade(u){ const cost = Math.floor(getUpgradeCost(u)); if(state.cells >= cost){ state.cells -= cost; state.upgrades[u.id]++; state.cps += u.cps; log(`Purchased ${u.name} (+${u.cps} cps)`); updateUpgradesUI(); checkAutoUnlock(); renderAll(); }}
-    function getUpgradeCost(u){ const bought = state.upgrades[u.id] || 0; return u.baseCost * Math.pow(1.6, bought); }
+    function getUpgradeCost(u){
+const bought = state.upgrades[u.id] || 0;
+let scale = 1.6;
+if(state.stage < 4) scale = 1.5;
+else if(state.stage > 10) scale = 1.7;
+return Math.floor(u.baseCost * Math.pow(scale,bought));
+}
     function updateUpgradesUI(){ upgradesData.forEach(u=>{ const btn = document.getElementById('buy-'+u.id); const cost = Math.floor(getUpgradeCost(u)); btn.textContent = `Buy (${format(cost)})`; }); }
 
     function buyGenetic(g){ if(state.dna >= g.cost && !state.genetics[g.id]){ state.dna -= g.cost; state.genetics[g.id]=1; if(g.type==='mult'){ /* nothing extra, multiplier used in addCells */ } if(g.type==='auto'){ state.autoInterval = Math.max(1200, Math.floor(state.autoInterval * g.value)); } log(`Genetic upgrade purchased: ${g.name}`); renderAll(); } }
@@ -248,16 +254,27 @@
       }
     }
 
-    function checkDNAGain(){ // DNA gained for every 1e6 lifetime totalCells
-      const dnaFromTotal = Math.floor(state.totalCells / 1_000_000);
-      const dnaAlready = state.dnaGainedTotal || 0;
-      const newDNA = dnaFromTotal - dnaAlready;
-      if(newDNA > 0){ state.dna += newDNA; state.dnaGainedTotal = dnaFromTotal; log(`Gained ${newDNA} DNA from long-term growth.`); }
-      // show genetic panel at stage 5
-      if(state.stage >= 5) geneticPanel.style.display = 'block';
-    }
+    function checkDNAGain(){
+let dnaPer = 1_000_000;
+if(state.stage <=6) dnaPer = 500_000;
+else if(state.stage >=10) dnaPer = 5_000_000;
+const dnaFromTotal = Math.floor(state.totalCells / dnaPer);
+const dnaAlready = state.dnaGainedTotal || 0;
+const newDNA = dnaFromTotal - dnaAlready;
+if(newDNA>0){ state.dna += newDNA; state.dnaGainedTotal = dnaFromTotal; log(`Gained ${newDNA} DNA`); }
+if(state.stage>=5) document.getElementById('geneticPanel').style.display='block';
+}
 
-    function checkAchievements(){ achievementsData.forEach(a=>{ if(!state.achievements[a.id] && a.check(state)){ state.achievements[a.id]=true; log(`Achievement: ${a.name}`); const el = document.getElementById('ach-'+a.id); if(el) el.classList.add('unlocked'); /* rewards applied via multipliers in getAllMultipliers */ } }); }
+    function checkAchievements(){
+achievementsData.forEach(a=>{
+if(!state.achievements[a.id] && a.check(state)){
+state.achievements[a.id]=true;
+log(`Achievement: ${a.name}`);
+const el = document.getElementById('ach-'+a.id);
+if(el) el.classList.add('unlocked');
+}
+});
+}
 
     // progress bars
     function updateProgressBars(){ const nextGoal = Math.pow(1.8, state.stage-1) * 1000; const progress = Math.min(state.cells / nextGoal, 1); evoBar.style.width = (progress*100) + '%'; evoBar.title = `${Math.floor(state.cells)} / ${Math.floor(nextGoal)} Cells`;
@@ -272,7 +289,15 @@
     }
 
     // main tick
-    function tick(){ const now = Date.now(); let dt = (now - state.lastTick)/1000.0; if(dt>10) dt=10; state.lastTick = now; const gain = state.cps * dt; state.cells += gain; state.totalCells += gain; state.playedSeconds += Math.floor(dt);
+    function tick(){
+const now = Date.now();
+let dt=(now-state.lastTick)/1000; if(dt>10) dt=10;
+state.lastTick=now;
+const gain=state.cps*dt;
+state.cells+=gain; state.totalCells+=gain; state.playedSeconds+=Math.floor(dt);
+if(Math.random() < Math.min(0.2,state.cps/500)) spawnCell('passive');
+checkEvolution(); checkDNAGain(); checkAchievements(); renderAll();
+}
       // passive spawns
       if(Math.random() < Math.min(0.2, state.cps/500)) spawnCell('passive'); checkEvolution(); checkDNAGain(); checkAchievements(); renderAll(); }
 
