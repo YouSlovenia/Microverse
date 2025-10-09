@@ -116,7 +116,7 @@
 
   <script>
     // Balanced Update: DNA, Achievements, Progress Bars, Automation
-    const GAME_VERSION = '0.9.1-balanced';
+    const GAME_VERSION = '0.9.2-balanced';
 
     // --- data definitions ---
     const upgradesData = [
@@ -160,18 +160,9 @@
     // --- game state ---
     const state = {
       version: GAME_VERSION,
-      cells:0,
-      totalCells:0,
-      cps:0,
-      stage:1,
-      dna:0,
-      upgrades:{},
-      genetics:{},
-      achievements:{},
-      autoBuy:false,
-      autoInterval:5000, // ms
-      playedSeconds:0,
-      lastTick:Date.now()
+      cells:0,totalCells:0,cps:0,stage:1,dna:0,
+      upgrades:{},genetics:{},achievements:{},
+      autoBuy:false,autoInterval:5000,playedSeconds:0,lastTick:Date.now(),dnaGainedTotal:0
     };
 
     // --- DOM refs ---
@@ -243,7 +234,19 @@
 
     function getCurrentCellType(){ let available = cellTypes.filter(ct=> ct.unlockStage <= state.stage); return available[Math.floor(Math.random()*available.length)]; }
 
-    function checkEvolution(){ const threshold = Math.pow(1.8, state.stage-1) * 1000; if(state.cells >= threshold){ state.stage++; state.cps *= 1.12; log(`Evolution! Reached Stage ${state.stage} — new cell types available.`); const ct = getCurrentCellType(); document.getElementById('previewDot').style.background = ct.color; for(let i=0;i<10;i++) spawnCell('evo'); checkDNAGain(); } }
+    function checkEvolution(){
+      const threshold = Math.pow(1.8,state.stage-1)*1000;
+      if(state.cells>=threshold){
+        state.stage++;
+        state.cps *= 1.12;
+        if(state.stage>15) state.cps *= 1.05; // soft late-game cap
+        log(`Evolution! Reached Stage ${state.stage}`);
+        const ct = getCurrentCellType();
+        document.getElementById('previewDot').style.background = ct.color;
+        for(let i=0;i<10;i++) spawnCell('evo');
+        checkDNAGain();
+      }
+    }
 
     function checkDNAGain(){ // DNA gained for every 1e6 lifetime totalCells
       const dnaFromTotal = Math.floor(state.totalCells / 1_000_000);
